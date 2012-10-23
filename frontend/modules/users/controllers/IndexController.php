@@ -84,6 +84,49 @@ class IndexController extends FrontController
     }
 
     /**
+     * Подтверждение e-mail адреса.
+     * Переход на страницу осуществляется из письма.
+     * @param int $user Id пользователя
+     * @param int $solt Соль дял проверки
+     * @return void
+     */
+    public function actionEmailConfirm($user, $solt)
+	{
+		$user = (int)$_GET['user'];
+		$solt = (int)$_GET['solt'];
+
+        $record = $sql = Yii::app()->db->createCommand("
+            SELECT
+                t.id,
+                t.user,
+                t.email
+            FROM
+                user_confirm_email AS t
+            WHERE
+                t.user = {$user}
+            AND t.solt = {$solt}
+        ")->queryRow();
+
+        if(isset($record) && $record != null) {
+            // Удаляем запись из вспомогательной таблицы.
+            Yii::app()->db->createCommand("
+                DELETE FROM user_confirm_email WHERE id = {$record['id']}
+            ")->execute();
+
+            // Активируем пользователя и обновляем адрес.
+            Yii::app()->db->createCommand("
+                UPDATE user_full SET email_confirm = 1, email = '{$record['email']}' WHERE id = {$record['user']}
+            ")->execute();
+
+            Yii::app()->user->setFlash('user_confirm_email_success', 'Ваш email был успешно подтвержден.');
+
+            $this->redirect(Yii::app()->homeUrl);
+        } else {
+            throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+        }
+	}
+
+    /**
      * Проверка существования указанного e-mail адреса.
      * @param int $userId Id пользователя, меняющего email
 	 * @param string $email Проверяемый адрес
