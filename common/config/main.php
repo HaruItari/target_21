@@ -16,6 +16,7 @@ return array(
         'common.components.*',
         'common.components.baseClasses.*',
         'common.components.global.*',
+        'common.components.validators.*',
     ),
 
     'modules' => array(
@@ -55,9 +56,9 @@ return array(
 
         'db' => array(
             'class' => 'system.db.CDbConnection',
-            'connectionString' => 'mysql:host=localhost;dbname=target_22',
-            'username' => 'target_21',
-            'password' => 'password',
+            'connectionString' => 'mysql:host=localhost;dbname=target_21',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
         ),
 
