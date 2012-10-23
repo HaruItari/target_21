@@ -19,7 +19,7 @@ class UsersModule extends WebModule
         $this->setParams(array(
             // время кэширования.
             'cacheTime' => array(
-
+                'profile' => 0, // Профиль пользователя.
             ),
         ));
     }

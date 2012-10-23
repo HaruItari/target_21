@@ -84,6 +84,38 @@ class IndexController extends FrontController
     }
 
     /**
+     * Просмотр профиля пользователя.
+     * @param int $id Id пользователя, чей профиль просматривается.
+     * Если не передан - загружается профиль авторизированного пользователя.
+     * @return void
+     */
+    public function actionProfile($id = null)
+    {
+        // Если это профиль текущего пользователя, кэширование не начинаем.
+        if(!Yii::app()->user->isGuest && (Yii::app()->user->id == $id)) {
+            $this->render('profile', array(
+                'user' => $this->loadUserData($id),
+            ));
+
+        // Если профиль не принадлежит текущему пользователю, начинаем кэширование.
+        } else {
+            if($this->beginCache('userProfile', array(
+                'cacheID' => 'memCache',
+                'duration' => $this->module->getParams()->cacheTime['profile'],
+                'varyByParam' => array(
+                    'id',
+                ),
+            ))) {
+                $this->render('profile', array(
+                    'user' => $this->loadUserData($id),
+                ));
+
+                $this->endCache();
+            }
+        }
+    }
+
+    /**
      * Востановление забытого пароля.
      * Если email был подтвержден, высылает сообщение с новым паролем.
      * @return void
@@ -127,7 +159,7 @@ class IndexController extends FrontController
     {
         $this->render('restorePasswordOk');
     }
-    
+
     /**
      * Подтверждение e-mail адреса.
      * Переход на страницу осуществляется из письма.
@@ -172,6 +204,40 @@ class IndexController extends FrontController
 	}
 
     /**
+     * Загрузка информации о пользователе.
+     * @param int $id Id пользователя
+     * @return array
+     */
+    protected function loadUserData($id)
+    {
+        $sql = Yii::app()->db->createCommand()
+            ->select(array(
+                't.id',
+                't.login',
+                'rFull.date_reg AS dateReg',
+                'rFull.birthday',
+                'rFull.sex',
+                'rFull.name',
+                'rGroup.group AS groupName',
+                'rGroup.style AS groupStyle',
+                'rLastOnline.last_online AS lastOnline',
+            ))
+            ->from(array(
+                'user AS t',
+            ))
+            ->leftJoin('user_full AS rFull', 't.id = rFull.id')
+            ->leftJoin('user_group AS rGroup', 't.group = rGroup.id')
+            ->leftJoin('user_last_online AS rLastOnline', 't.id = rLastOnline.user')
+            ->where('t.id = :id AND t.is_remove = 0', array(':id' => $id))
+            ->limit(1);
+
+        if(!$user = $sql->queryRow())
+            throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+        return $user;
+    }
+
+    /**
      * Проверка существования указанного e-mail адреса.
      * @param int $userId Id пользователя, меняющего email
 	 * @param string $email Проверяемый адрес
@@ -195,16 +261,31 @@ class IndexController extends FrontController
             case 'registration' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
+
                 break;
 
             case 'login' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
+
+                break;
+
+            case 'profile' :
+                if(!empty($_GET['id'])) {
+                    $_GET['id'] = (int)$_GET['id'];
+                } else {
+                    if(!Yii::app()->user->isGuest)
+                        $_GET['id'] = Yii::app()->user->id;
+                    else
+                        throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+                }
+
                 break;
 
             case 'restorePassword' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
+
                 break;
         }
     }
