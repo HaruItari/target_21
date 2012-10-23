@@ -84,6 +84,51 @@ class IndexController extends FrontController
     }
 
     /**
+     * Востановление забытого пароля.
+     * Если email был подтвержден, высылает сообщение с новым паролем.
+     * @return void
+     */
+    public function actionRestorePassword()
+	{
+		$user = new MUser();
+		$user->scenario = 'restorePassword';
+
+        $this->performAjaxValidation($user);
+
+		if(isset($_POST['MUser'])) {
+			$user->attributes = $_POST['MUser'];
+
+			if($user->validate()) {
+                // Запоминаем адрес почты, переданный из модели в поле пароля.
+                $email = $user->password;
+
+				$newPassword = LString::generateString(10);
+
+                Yii::app()->db->createCommand("
+                    UPDATE user SET password = '{$user->passwordCript($newPassword)}'
+                    WHERE id = {$user->id}
+                ")->execute();
+
+				$this->redirect(Yii::app()->createUrl('users/index/restorePasswordOk'));
+			}
+		}
+
+		$this->render('restorePassword', array(
+			'user' => $user,
+		));
+	}
+
+    /**
+     * Востановление забытого пароля (окончание).
+     * @see self::actionRestorePassword()
+     * @return void
+     */
+    public function actionRestorePasswordOk()
+    {
+        $this->render('restorePasswordOk');
+    }
+    
+    /**
      * Подтверждение e-mail адреса.
      * Переход на страницу осуществляется из письма.
      * @param int $user Id пользователя
