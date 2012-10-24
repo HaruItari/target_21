@@ -32,7 +32,7 @@ class MUserLastOnline extends ActiveRecord
     public function rules()
     {
         return array(
-            array('last_online', 'default', 'value' => new CDbExpression('NOW()')),
+            array('last_online', 'default', 'value' => time()),
         );
     }
 

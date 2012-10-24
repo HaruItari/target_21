@@ -9,7 +9,8 @@ class IndexController extends FrontController
      */
     public function actionIndex()
     {
-        echo 'Frontend is started...';
+        echo 'Frontend is started...<br />';
+        $this->render('index');
     }
 
     /**

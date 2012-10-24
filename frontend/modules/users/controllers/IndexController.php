@@ -92,7 +92,7 @@ class IndexController extends FrontController
     public function actionProfile($id = null)
     {
         // Если это профиль текущего пользователя, кэширование не начинаем.
-        if(!Yii::app()->user->isGuest && (Yii::app()->user->id == $id)) {
+        if(Yii::app()->user->id == $id) {
             $this->render('profile', array(
                 'user' => $this->loadUserData($id),
             ));
