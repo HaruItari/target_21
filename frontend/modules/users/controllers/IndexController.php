@@ -231,9 +231,14 @@ class IndexController extends FrontController
             ->where('t.id = :id AND t.is_remove = 0', array(':id' => $id))
             ->limit(1);
 
-        if(!$user = $sql->queryRow())
+        if(!$record = $sql->queryRow())
             throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
 
+        // Формируем сущность.
+        $user = new EUser();
+        $user->attributes = $record;
+
+        return $user;
         return $user;
     }
 
