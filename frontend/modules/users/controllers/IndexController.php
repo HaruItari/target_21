@@ -258,6 +258,19 @@ class IndexController extends FrontController
 	}
 
     /**
+     * Формирование пользовательского меню.
+     * @see CController::renderDynamic()
+     * @param int $id Id пользователя, чей профиль просматривается
+     * @return string Код для отображения в представлении
+     */
+    protected function dynamicUserMenu($id)
+    {
+        return $this->renderPartial('dynamicUserMenu', array(
+            'id' => $id,
+        ), true);
+    }
+
+    /**
      * @see Controller::createPageParams()
      */
     protected function createPageParams()

@@ -68,30 +68,23 @@ class EUser extends Essence
     }
 
     /**
+     * Отрисовывает аватар пользователя.
+     * @return void
+     */
+    public function getAvatar()
+    {
+        $this->widget('common.modules.users.components.widgets.WUserAvatar', array(
+            'id' => $this->id,
+        ));
+    }
+
+    /**
      * Выводит на экран логин пользователя.
      * @return void
      */
     public function getLogin()
     {
         echo '<span class="user-login">' . $this->login . '</span>';
-    }
-
-    /**
-     * Выводит на экран имя пользователя.
-     * @return void
-     */
-    public function getName()
-    {
-        echo '<span class="user-name">' . $this->name . '</span>';
-    }
-
-    /**
-     * Выводит на экран пол пользователя.
-     * @return void
-     */
-    public function getSex()
-    {
-        echo '<span class="user-sex">' . $this->sex . '</span>';
     }
 
     /**
@@ -106,6 +99,42 @@ class EUser extends Essence
             $str = '<span class="user-group">';
 
         $str .= $this->groupName . '</span>';
+
+        echo $str;
+    }
+
+    /**
+     * Выводит на экран имя пользователя.
+     * @return void
+     */
+    public function getName()
+    {
+         $str = '<span class="user-name">';
+
+        if(isset($this->name))
+            $str .= $this->name;
+        else
+            $str .= 'Не указано';
+
+        $str .= '</span>';
+
+        echo $str;
+    }
+
+    /**
+     * Выводит на экран пол пользователя.
+     * @return void
+     */
+    public function getSex()
+    {
+        $str = '<span class="user-sex">';
+
+        if(isset($this->sex))
+            $str .= $this->sex;
+        else
+            $str .= 'Не указан';
+
+        $str .= '</span>';
 
         echo $str;
     }
