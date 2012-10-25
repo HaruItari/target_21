@@ -14,7 +14,7 @@ return array(
     'components' => array(
         'user' => array(
             'class' => 'FrontUser',
-            'loginUrl' => '/frontend/www/user/index/login',
+            'loginUrl' => '/frontend/www/users/index/login',
         ),
     ),
 );

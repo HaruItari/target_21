@@ -26,7 +26,6 @@ class IndexController extends FrontController
 
                 $userFull->id = $user->id;
                 $userFull->save(true);
-
                 $lastOnline = new MUserLastOnline();
                 $lastOnline->user = $user->id;
                 $lastOnline->save();
@@ -113,6 +112,59 @@ class IndexController extends FrontController
                 $this->endCache();
             }
         }
+    }
+
+    /**
+     * Редактирование личных данных пользователя.
+     * @return void
+     */
+    public function actionEditProfile()
+    {
+        $id = Yii::app()->user->id;
+
+        $user = MUser::model()->findByPk($id);
+		$userFull = MUserFull::model()->findByPk($id);
+		$user->scenario = $userFull->scenario = 'editProfile';
+
+        if(isset($_POST['MUser']) && isset($_POST['MUserFull'])) {
+            $oldEmail = $userFull->email;
+            $user->attributes = $_POST['MUser'];
+            $userFull->attributes = $_POST['MUserFull'];
+
+            if($this->multipleValidate(array($user, $userFull))) {
+				// Если email был изменен - высылаем письмо с подтверждением..
+				if($oldEmail != $userFull->email) {
+					$this->checkEmail($id, $userFull->email);
+					$userFull->email = $oldEmail;
+				}
+
+				// если был введен новый пароль - меняем его.
+				if($user->oldPassword && $user->newPassword && $user->newPassword2)
+					$user->password = $user->passwordCript($user->newPassword);
+
+				// Удаляем аватар, если указанно.
+                $avatarDir = $this->module->getParams()->avatarsDir . DIRECTORY_SEPARATOR . $user->id . '.jpg';
+
+				if(!$user->deleteAvatar == 1) {
+					if($user->img = CUploadedFile::getInstance($user, 'img')) {
+						$user->img->saveAs($avatarDir);
+					}
+				} else {
+					if(file_exists($avatarDir))
+						unlink($avatarDir);
+				}
+
+				$user->save(false);
+				$userFull->save(false);
+
+				$this->redirect(Yii::app()->createUrl('users/index/profile'));
+			}
+        }
+
+        $this->render('editProfile', array(
+            'user' => $user,
+            'userFull' => $userFull,
+        ));
     }
 
     /**
@@ -298,6 +350,11 @@ class IndexController extends FrontController
                         throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
                 }
 
+                break;
+
+            case 'editProfile' :
+                if(Yii::app()->user->isGuest)
+                    $this->redirect(Yii::app()->user->loginUrl);
                 break;
 
             case 'restorePassword' :

@@ -50,6 +50,12 @@ class MUser extends ActiveRecord
     public $verifyCode;
 
     /**
+     * Метка об удалении аватра.
+     * @see frontend.modules.users.controllers.IndexController::actionEditProfile()
+     * @var bool
+     */
+    public $deleteAvatar;
+    /**
      * @see CActiveRecord::model()
      */
     public static function model($className=__CLASS__)
@@ -84,6 +90,8 @@ class MUser extends ActiveRecord
 
             array('img', 'ImageValidator', 'mime' => array('image/jpg', 'image/jpeg'), 'maxWidth' => 150, 'maxHeight' => 150),
 
+            array('deleteAvatar', 'safe'),
+
             // Регистрация нового пользователя.
             array('login, password, verifyCode', 'required', 'on' => 'registration'),
             array('login', 'unique', 'on' => 'registration'),
@@ -99,9 +107,6 @@ class MUser extends ActiveRecord
 			array('verifyCode', 'captcha', 'allowEmpty' => !extension_loaded('gd'), 'on' => 'restorePassword'),
 
             // Редактирвоание личных данных.
-			array('email', 'required', 'on' => 'editProfile'),
-			array('email', 'unique', 'on' => 'editProfile'),
-
 			array('newPassword2', 'compare', 'compareAttribute'=>'newPassword', 'on' => 'editProfile'),
 			array('oldPassword', 'checkOldPassword', 'on' => 'editProfile'),
         );
@@ -124,6 +129,7 @@ class MUser extends ActiveRecord
             'oldPassword' => 'Текущий пароль',
             'newPassword' => 'Новый пароль',
             'newPassword2' => 'Повтор пароля',
+            'deleteAvatar' => 'Удалить аватар',
         );
     }
 

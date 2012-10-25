@@ -56,11 +56,15 @@ class MUserFull extends ActiveRecord
 
             array('birthday', 'match', 'pattern' => '/^\d\d\.\d\d\.\d\d\d\d$/'),
 
-            array('date_reg', 'default', 'value' => time()),
+            array('date_reg', 'default', 'value' => new CDbExpression('NOW()')),
 
             // Регистрация нового пользователя.
             array('email', 'required', 'on' => 'registration'),
             array('email', 'unique', 'on' => 'registration'),
+
+            // Редактирование личных данных.
+			array('email', 'required', 'on' => 'editProfile'),
+			array('email', 'unique', 'on' => 'editProfile'),
         );
     }
 
@@ -84,7 +88,7 @@ class MUserFull extends ActiveRecord
         return array(
             'name' => 'До 25 символов.',
             'sex' => '',
-            'birthday' => 'В формате гггг-мм-дд',
+            'birthday' => 'В формате дд.мм.гггг',
             'email' => 'Адрес электронной почты',
         );
     }
@@ -101,5 +105,35 @@ class MUserFull extends ActiveRecord
                 'di',
             ),
         );
+    }
+
+    /**
+     * @see CActiveRecord:beforeSave()
+     */
+    protected function beforeSave()
+    {
+        if(!parent::beforeSave())
+            return false;
+
+        // Заменяем пустые поля на NULL
+        if(empty($this->sex)) $this->sex = new CDbExpression('NULL');
+        if(empty($this->name)) $this->name = new CDbExpression('NULL');
+        if(!empty($this->birthday))
+            $this->birthday = strtotime($this->birthday);
+        else
+            $this->birthday = new CDbExpression('NULL');
+
+        return true;
+    }
+
+    /**
+     * @see CActiveRecord::afterFind()
+     */
+    protected function afterFind()
+    {
+        if(!empty($this->birthday))
+            $this->birthday = date('d.m.Y', $this->birthday);
+
+        $this->date_reg = date('d.m.Y', $this->date_reg);
     }
 }
