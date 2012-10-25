@@ -17,6 +17,9 @@ return array(
         'common.components.baseClasses.*',
         'common.components.global.*',
         'common.components.validators.*',
+
+        'common.modules.users.models.MUser',
+        'common.modules.users.models.MUserGroup',
     ),
 
     'modules' => array(
