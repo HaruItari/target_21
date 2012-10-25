@@ -9,6 +9,9 @@ abstract class BackController extends Controller
      */
     protected function beforeAction($action)
     {
+        if(!parent::beforeAction($action))
+            return false;
+        
         // Проверяем, авторизирован ли пользователь.
         // Если нет, направляем на страницу авторизации.
         if(Yii::app()->user->isGuest) {

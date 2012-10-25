@@ -10,6 +10,7 @@ class IndexController extends BackController
     public function actionIndex()
     {
         echo 'Backend is started...';
+        $this->render('index');
     }
 
     /**

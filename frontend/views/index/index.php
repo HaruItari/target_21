@@ -9,4 +9,5 @@
             <li><a href="<?php echo Yii::app()->createUrl('users/index/emailConfirm'); ?>">emailConfirm</a></li>
             <li><a href="<?php echo Yii::app()->createUrl('users/index/restorePassword'); ?>">restorePassword</a></li>
         </ul>
+    </li>
 </ul>

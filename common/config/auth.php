@@ -11,7 +11,9 @@ $global = array(
         'children' => array(
             'user',
 
-            'user_access_cms',
+            'user_add_group',
+            'user_edit_group',
+            'user_remove_group',
         ),
         'bizRule' => null,
         'data' => null,
