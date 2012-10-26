@@ -19,7 +19,7 @@
 
     <td>
         <?php if(Yii::app()->user->checkAccess('user_remove_group', $group)) { ?>
-            <a href="<?php echo Yii::app()->createUrl('users/index/removeGroup', array('id'=>$group['id'])); ?>">Редактировать</a>
+            <a href="<?php echo Yii::app()->createUrl('users/index/removeGroup', array('id'=>$group['id'])); ?>">Удалить</a>
         <?php } ?>
     </td>
 </tr>

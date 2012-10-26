@@ -21,7 +21,21 @@ class IndexController extends BackController
      */
     public function actionAddGroup()
     {
-      
+        $group = new MUserGroup();
+        $group->scenario = 'addGroup';
+
+        $this->performAjaxValidation($group);
+
+        if(isset($_POST['MUserGroup'])) {
+            $group->attributes = $_POST['MUserGroup'];
+
+            if($group->save())
+                $this->redirect(Yii::app()->createUrl('users/index/index'));
+        }
+
+        $this->render('addGroup', array(
+            'group' => $group,
+        ));
     }
 
     /**
@@ -36,16 +50,16 @@ class IndexController extends BackController
                 't.group',
                 't.style',
                 't.is_default AS isDefault',
-                'count(t.id) AS countUsers',
+                'count(rUser.id) AS countUsers',
             ))
             ->from(array(
-                'user_group AS t',
-                'user as rUser'
+                'user_group AS t'
             ))
-            ->where('t.id = rUser.group')
+            ->leftjoin('user AS rUser', 't.id = rUser.group')
             ->group('t.id')
             ->order('t.group')
         ->queryAll();
+
         return $list;
     }
 

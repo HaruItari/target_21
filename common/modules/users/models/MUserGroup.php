@@ -7,7 +7,7 @@
    `group` VARCHAR( 25 ) NOT NULL ,
    `role` VARCHAR( 25 ) NOT NULL ,
    `style` VARCHAR( 100 ) NULL ,
-   `is_default` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0' 
+   `is_default` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'
    ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
  */
 class MUserGroup extends ActiveRecord
@@ -62,12 +62,17 @@ class MUserGroup extends ActiveRecord
     {
         return array(
             array('group', 'length', 'min' => 5, 'max' => 25),
-            array('group', 'match', 'pattern' => '/^[а-я0-9 \-]+&/i'),
+            array('group', 'match', 'pattern' => '/^[а-я0-9 \-]+$/iu'),
 
             array('role', 'length', 'min' => 3, 'max' => 25),
-            array('role', 'match', 'pattern' => '/^[a-z0-9_\-]+&/i'),
+            array('role', 'match', 'pattern' => '/^[a-z0-9\_]+$/iu'),
 
             array('style', 'length', 'max' => 100),
+            array('style', 'match', 'pattern' => '/^[^<^>]+$/iu'),
+
+            // Добавление новой группы.
+            array('group, role', 'required'),
+            array('group, role', 'unique'),
         );
     }
 
