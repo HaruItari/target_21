@@ -126,6 +126,8 @@ class IndexController extends FrontController
 		$userFull = MUserFull::model()->findByPk($id);
 		$user->scenario = $userFull->scenario = 'editProfile';
 
+        $this->performAjaxValidation(array($user, $userFull));
+        
         if(isset($_POST['MUser']) && isset($_POST['MUserFull'])) {
             $oldEmail = $userFull->email;
             $user->attributes = $_POST['MUser'];
