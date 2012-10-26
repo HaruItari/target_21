@@ -327,7 +327,7 @@ class IndexController extends FrontController
      */
     protected function createPageParams()
     {
-        switch($this->action->id) {
+        switch(mb_strtolower($this->action->id)) {
             case 'registration' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
@@ -352,12 +352,12 @@ class IndexController extends FrontController
 
                 break;
 
-            case 'editProfile' :
+            case 'editprofile' :
                 if(Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->user->loginUrl);
                 break;
 
-            case 'restorePassword' :
+            case 'restorepassword' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
 

@@ -16,6 +16,15 @@ class IndexController extends BackController
     }
 
     /**
+     * Добавление новой группы пользователей.
+     * @return void
+     */
+    public function actionAddGroup()
+    {
+
+    }
+
+    /**
      * Загрузка из БД списка групп пользователей.
      * @return array
      */
@@ -45,9 +54,15 @@ class IndexController extends BackController
      */
     protected function createPageParams()
     {
-        switch($this->action->id) {
+        switch(mb_strtolower($this->action->id)) {
             case 'index' :
                 if(!Yii::app()->user->checkAccess('user_access_cms'))
+                    $this->redirect(Yii::app()->user->loginUrl);
+
+                break;
+
+            case 'addgroup' :
+                if(!Yii::app()->user->checkAccess('user_add_group'))
                     $this->redirect(Yii::app()->user->loginUrl);
 
                 break;

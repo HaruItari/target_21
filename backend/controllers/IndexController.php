@@ -51,6 +51,12 @@ class IndexController extends BackController
      */
     protected function createPageParams()
     {
+        switch(mb_strtolower($this->action->id)) {
+            case 'login' :
+                if(!Yii::app()->user->isGuest)
+                    $this->redirect(Yii::app()->homeUrl);
 
+                break;
+        }
     }
 }
