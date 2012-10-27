@@ -17,7 +17,7 @@
 </table>
 
 <ul>
-    <?php if(Yii::app()->user->checkAccess('user_add_group')) { ?>
+    <?php if(Yii::app()->user->checkAccess('users_add_group')) { ?>
         <li><a href="<?php echo Yii::app()->createUrl('users/index/addGroup'); ?>">Добавить группу</a></li>
     <?php } ?>
 </ul>

@@ -14,4 +14,8 @@
     <td>
         <?php echo ($user->emailConfirm == 1) ? 'Подтвержден' : 'Не подтвержден'; ?>
     </td>
+
+    <td>
+        
+    </td>
 </tr>

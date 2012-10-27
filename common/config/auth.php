@@ -11,9 +11,9 @@ $global = array(
         'children' => array(
             'user',
 
-            'user_add_group',
-            'user_edit_group',
-            'user_remove_group',
+            'users_add_group',
+            'users_edit_group',
+            'users_remove_group',
         ),
         'bizRule' => null,
         'data' => null,

@@ -1,7 +1,7 @@
 <h1><?php echo ($group->isNewRecord) ? 'Новая группа' : 'Редактировать группу'; ?></h1>
 
 <?php  $form = $this->beginWidget('ActiveForm', array(
-    'id' => 'group-add',
+    'id' => 'group-edit',
     'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 )); ?>

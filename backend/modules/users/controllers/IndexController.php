@@ -100,7 +100,7 @@ class IndexController extends BackController
             ->limit(1)
         ->queryRow();
 
-        if(Yii::app()->user->checkAccess('user_remove_group', $group))
+        if(Yii::app()->user->checkAccess('users_remove_group', $group))
             Yii::app()->db->createCommand()->delete('user_group', 'id = :id', array(':id'=>$id));
 
         $this->redirect($_SERVER['HTTP_REFERER']);
@@ -194,19 +194,19 @@ class IndexController extends BackController
     {
         switch(mb_strtolower($this->action->id)) {
             case 'index' :
-                if(!Yii::app()->user->checkAccess('user_access_cms'))
+                if(!Yii::app()->user->checkAccess('users_access_cms'))
                     $this->redirect(Yii::app()->user->loginUrl);
 
                 break;
 
             case 'addgroup' :
-                if(!Yii::app()->user->checkAccess('user_add_group'))
+                if(!Yii::app()->user->checkAccess('users_add_group'))
                     $this->redirect(Yii::app()->user->loginUrl);
 
                 break;
 
             case 'editgroup' :
-                if(!Yii::app()->user->checkAccess('user_edit_group'))
+                if(!Yii::app()->user->checkAccess('users_edit_group'))
                     $this->redirect(Yii::app()->user->loginUrl);
 
                 if(!empty($_GET['id']))
