@@ -56,7 +56,7 @@ class MUserFull extends ActiveRecord
 
             array('birthday', 'match', 'pattern' => '/^\d\d\.\d\d\.\d\d\d\d$/'),
 
-            array('date_reg', 'default', 'value' => new CDbExpression('NOW()')),
+            array('date_reg', 'default', 'value' => time()),
 
             // Регистрация нового пользователя.
             array('email', 'required', 'on' => 'registration'),

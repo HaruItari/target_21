@@ -4,8 +4,8 @@ defined('YII_DEBUG') or define('YII_DEBUG',true);
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
 // Инициализируем глобальные константы.
-const FRONTEND_URL = 'http://target_17/frontend/www/';
-const BACKEND_URL = 'http://target_17/backend/www/';
+const FRONTEND_URL = 'http://target_21/frontend/www/';
+const BACKEND_URL = 'http://target_21/backend/www/';
 
 // Устанавливаем текущую директорию в корень сайта.
 chdir(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..');

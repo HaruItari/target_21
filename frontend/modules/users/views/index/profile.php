@@ -1,6 +1,6 @@
 <h1>Профиль пользователя</h1>
 
-<p>Логин: <?php echo $user->getLogin(); ?></p>
+<p>Логин: <?php echo $user->getLogin(false); ?></p>
 <p>Группа: <?php echo $user->getGroup(); ?></p>
 <p>Дата регистрации: <?php echo $user->getDateReg(); ?></p>
 <p>Последнее посещение: <?php echo $user->getLastonline(); ?></p>

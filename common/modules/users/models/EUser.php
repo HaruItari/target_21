@@ -60,6 +60,18 @@ class EUser extends Essence
     public $groupStyle;
 
     /**
+     * Email.
+     * @var string
+     */
+    public $email;
+
+    /**
+     * Активация email
+     * @var int
+     */
+    public $emailConfirm;
+
+    /**
      * @see Essence::__construct()
      */
     public function __construct($class = __CLASS__)
@@ -80,11 +92,21 @@ class EUser extends Essence
 
     /**
      * Выводит на экран логин пользователя.
+     * @param $isLink Выводить логин в виде ссылки или текста
      * @return void
      */
-    public function getLogin()
+    public function getLogin($isLink = true)
     {
-        echo '<span class="user-login">' . $this->login . '</span>';
+        $str = '<span class="user-login">';
+
+        if($isLink == true)
+            $str .= '<a href="' . Yii::app()->createFrontUrl('users/index/profile', array('id'=>$this->id)) . '">' . $this->login . '</a>';
+        else
+            $str .= $this->login;
+
+        $str .= '</span>';
+
+        echo $str;
     }
 
     /**

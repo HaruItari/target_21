@@ -12,6 +12,7 @@ class IndexController extends BackController
     {
         $this->render('index', array(
             'groupsList' => $this->loadgroupsList(),
+            'usersList' => $this->loadUsersList(),
         ));
     }
 
@@ -102,7 +103,7 @@ class IndexController extends BackController
     }
 
     /**
-     * Загрузка из БД списка групп пользователей.
+     * Загрузка из БД списка групп.
      * @return array
      */
     protected function loadgroupsList()
@@ -137,6 +138,45 @@ class IndexController extends BackController
         Yii::app()->db->createCommand()->update('user_group', array('is_default'=>1), 'id = :id', array(':id'=>$id));
 
         return true;
+    }
+
+    /**
+     * Загрузка из БД исписка пользователей.
+     * @return array
+     */
+    protected function loadUsersList()
+    {
+        $sql = Yii::app()->db->createCommand()
+            ->select(array(
+                't.id',
+                't.login',
+                'rFull.date_reg AS dateReg',
+                'rFull.email_confirm AS emailConfirm',
+                'rLastOnline.last_online AS lastOnline'
+            ))
+            ->from(array(
+                'user AS t'
+            ))
+            ->leftjoin('user_full AS rFull', 't.id = rFull.id')
+            ->leftjoin('user_last_online AS rLastonline', 't.id = rLastonline.id')
+            ->order('t.login');
+
+        // Разделяем на страницы.
+        $countSql = clone $sql;
+        $count = $countSql->select('COUNT(t.id)')->queryScalar();
+        $pages = new Pagination($count);
+        $pages->pageSize = $this->module->getParams()->usersOnPage;
+        $sql->limit($pages->pageSize, $pages->currentPage * $pages->pageSize);
+
+        $list = $sql->queryAll();
+
+        foreach($list AS $item) {
+            $user = new EUser();
+            $user->attributes = $item;
+            $return[] = $user;
+        }
+
+        return $return;
     }
 
     /**
