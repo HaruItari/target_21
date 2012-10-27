@@ -29,11 +29,47 @@ class IndexController extends BackController
         if(isset($_POST['MUserGroup'])) {
             $group->attributes = $_POST['MUserGroup'];
 
-            if($group->save())
+            if($group->save()) {
+                // Обновляем группу "по умолчанию", если требуется.
+                if($group->is_default == 1)
+                    $this->setDefaultGroup($group->id);
+
                 $this->redirect(Yii::app()->createUrl('users/index/index'));
+            }
         }
 
-        $this->render('addGroup', array(
+        $this->render('editGroup', array(
+            'group' => $group,
+        ));
+    }
+
+    /**
+     * Редактирование группы пользователей.
+     * @return void
+     */
+    public function actionEditGroup($id)
+    {
+        $group = MUserGroup::model()->findByPk($id);
+        if(empty($group))
+            throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+        $group->scenario = 'editGroup';
+
+        $this->performAjaxValidation($group);
+
+        if(isset($_POST['MUserGroup'])) {
+            $group->attributes = $_POST['MUserGroup'];
+
+            if($group->save()) {
+                // Обновляем группу "по умолчанию", если требуется.
+                if($group->is_default == 1)
+                    $this->setDefaultGroup($group->id);
+
+                $this->redirect(Yii::app()->createUrl('users/index/index'));
+            }
+        }
+
+        $this->render('editGroup', array(
             'group' => $group,
         ));
     }
@@ -64,6 +100,17 @@ class IndexController extends BackController
     }
 
     /**
+     * Установка новой группы "по умолчанию".
+     * @param int $id Id новой группы "по умолчанию"
+     * @return bool
+     */
+    protected function setDefaultGroup($id)
+    {
+        Yii::app()->db->createCommand()->update('user_group', array('is_default'=>0));
+        Yii::app()->db->createCommand()->update('user_group', array('is_default'=>1), 'id = :id', array(':id'=>$id));
+    }
+
+    /**
      * @see Controller::createPageParams()
      */
     protected function createPageParams()
@@ -78,6 +125,17 @@ class IndexController extends BackController
             case 'addgroup' :
                 if(!Yii::app()->user->checkAccess('user_add_group'))
                     $this->redirect(Yii::app()->user->loginUrl);
+
+                break;
+
+            case 'editgroup' :
+                if(!Yii::app()->user->checkAccess('user_edit_group'))
+                    $this->redirect(Yii::app()->user->loginUrl);
+
+                if(!empty($_GET['id']))
+                   $_GET['id'] = (int)$_GET['id'];
+                else
+                    throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
 
                 break;
         }

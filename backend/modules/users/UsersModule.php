@@ -26,7 +26,7 @@ class UsersModule extends WebModule
 
             // время кэширования.
             'cacheTime' => array(
-
+                
             ),
         ));
     }

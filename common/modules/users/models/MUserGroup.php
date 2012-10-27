@@ -70,6 +70,9 @@ class MUserGroup extends ActiveRecord
             array('style', 'length', 'max' => 100),
             array('style', 'match', 'pattern' => '/^[^<^>]+$/iu'),
 
+            array('is_default', 'numerical'),
+            array('is_default', 'default', 'value' => 0),
+
             // Добавление новой группы.
             array('group, role', 'required'),
             array('group, role', 'unique'),
@@ -85,6 +88,7 @@ class MUserGroup extends ActiveRecord
             'group' => 'Группа',
             'role' => 'Роль в системе',
             'style' => 'CSS-стиль',
+            'is_default' => 'Назначить по умолчанию',
         );
     }
 

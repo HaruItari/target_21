@@ -1,4 +1,4 @@
-<h1>Новая группа</h1>
+<h1><?php echo ($group->isNewRecord) ? 'Новая группа' : 'Редактировать группу'; ?></h1>
 
 <?php  $form = $this->beginWidget('ActiveForm', array(
     'id' => 'group-add',
@@ -30,8 +30,13 @@
     <?php echo $form->error($group, 'style'); ?>
 </div>
 
+<div class="row">
+    <?php echo $form->checkBox($group, 'is_default'); ?>
+    <?php echo $form->label($group, 'is_default'); ?>
+</div>
+
 <div class="row submit">
-    <?php echo CHtml::submitButton('Добавить'); ?>
+    <?php echo CHtml::submitButton(($group->isNewRecord) ? 'Добавить' : 'Сохранить'); ?>
 </div>
 
 <?php $this->endWidget(); ?>
