@@ -17,3 +17,7 @@
             )); ?>
     </tbody>
 </table>
+
+<div class="pages-list">
+    <?php $this->widget('LinkPager', array('pages'=>$usersListPages)) ?>
+</div>

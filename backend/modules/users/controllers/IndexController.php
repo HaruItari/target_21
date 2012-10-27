@@ -10,9 +10,13 @@ class IndexController extends BackController
      */
     public function actionIndex()
     {
+        $groupsList = $this->loadgroupsList();
+        $usersList = $this->loadUsersList();
+
         $this->render('index', array(
-            'groupsList' => $this->loadgroupsList(),
-            'usersList' => $this->loadUsersList(),
+            'groupsList' => $groupsList,
+            'usersList' => $usersList[0],
+            'usersListPages' => $usersList[1],
         ));
     }
 
@@ -143,6 +147,8 @@ class IndexController extends BackController
     /**
      * Загрузка из БД исписка пользователей.
      * @return array
+     * 0=> Массив сущностей пользователя
+     * 1 => Переменная страниц
      */
     protected function loadUsersList()
     {
@@ -159,6 +165,7 @@ class IndexController extends BackController
             ))
             ->leftjoin('user_full AS rFull', 't.id = rFull.id')
             ->leftjoin('user_last_online AS rLastonline', 't.id = rLastonline.id')
+            ->where('t.is_remove = 0')
             ->order('t.login');
 
         // Разделяем на страницы.
@@ -170,13 +177,14 @@ class IndexController extends BackController
 
         $list = $sql->queryAll();
 
+        // Вормируем сущности.
         foreach($list AS $item) {
             $user = new EUser();
             $user->attributes = $item;
             $return[] = $user;
         }
 
-        return $return;
+        return array($return, $pages);
     }
 
     /**

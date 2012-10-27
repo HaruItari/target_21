@@ -6,4 +6,5 @@
 
 <?php $this->renderPartial('index_usersList', array(
     'usersList' => $usersList,
+    'usersListPages' => $usersListPages,
 )); ?>
