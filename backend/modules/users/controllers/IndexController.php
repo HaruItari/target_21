@@ -75,6 +75,33 @@ class IndexController extends BackController
     }
 
     /**
+     * Удаление группы пользователей.
+     * @param int $id Id удаляемой группы
+     * @return bool
+     */
+    public function actionRemoveGroup($id)
+    {
+        $group = Yii::app()->db->createCommand()
+            ->select(array(
+                't.is_default AS isDefault',
+                'count(rUser.id) AS countUsers',
+            ))
+            ->from(array(
+                'user_group AS t'
+            ))
+            ->leftjoin('user AS rUser', 't.id = rUser.group')
+            ->group('t.id')
+            ->where('t.id = :id', array(':id' => $id))
+            ->limit(1)
+        ->queryRow();
+
+        if(Yii::app()->user->checkAccess('user_remove_group', $group))
+            Yii::app()->db->createCommand()->delete('user_group', 'id = :id', array(':id'=>$id));
+
+        $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
      * Загрузка из БД списка групп пользователей.
      * @return array
      */
@@ -108,6 +135,8 @@ class IndexController extends BackController
     {
         Yii::app()->db->createCommand()->update('user_group', array('is_default'=>0));
         Yii::app()->db->createCommand()->update('user_group', array('is_default'=>1), 'id = :id', array(':id'=>$id));
+
+        return true;
     }
 
     /**
@@ -132,6 +161,16 @@ class IndexController extends BackController
                 if(!Yii::app()->user->checkAccess('user_edit_group'))
                     $this->redirect(Yii::app()->user->loginUrl);
 
+                if(!empty($_GET['id']))
+                   $_GET['id'] = (int)$_GET['id'];
+                else
+                    throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+                break;
+
+            case 'removegroup' :
+                // Проверка на наличие прав роизводится в экшенепотому,
+                // что необходимо знать колличество пользователей в группе.
                 if(!empty($_GET['id']))
                    $_GET['id'] = (int)$_GET['id'];
                 else
