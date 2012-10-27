@@ -107,6 +107,35 @@ class IndexController extends BackController
     }
 
     /**
+     * Удаление пользователя.
+     * @param int $id Id удаляемого пользователя
+     */
+    public function actionRemoveuser($id)
+    {
+        $record = Yii::app()->db->createCommand()
+            ->select(array(
+                't.id',
+                't.login'
+            ))
+            ->from('user AS t')
+            ->where('t.id = :id', array(':id'=>$id))
+            ->limit(1)
+        ->queryRow();
+
+        $user = new Euser();
+        $user->attributes = $record;
+
+        if(!empty($_POST)) {
+            Yii::app()->db->createCommand()->update('user', array('is_remove'=>1), 'id = :id', array(':id'=>$id));
+            $this->redirect(Yii::app()->createUrl('users/index/index'));
+        } else {
+            $this->render('removeUser', array(
+                'user' => $user,
+            ));
+        }
+    }
+
+    /**
      * Загрузка из БД списка групп.
      * @return array
      */
@@ -195,25 +224,22 @@ class IndexController extends BackController
         switch(mb_strtolower($this->action->id)) {
             case 'index' :
                 if(!Yii::app()->user->checkAccess('users_access_cms'))
-                    $this->redirect(Yii::app()->user->loginUrl);
-
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
                 break;
 
             case 'addgroup' :
                 if(!Yii::app()->user->checkAccess('users_add_group'))
-                    $this->redirect(Yii::app()->user->loginUrl);
-
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
                 break;
 
             case 'editgroup' :
                 if(!Yii::app()->user->checkAccess('users_edit_group'))
-                    $this->redirect(Yii::app()->user->loginUrl);
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
 
                 if(!empty($_GET['id']))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
-
                 break;
 
             case 'removegroup' :
@@ -223,7 +249,16 @@ class IndexController extends BackController
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+                break;
 
+            case 'removeuser' :
+                if(!empty($_GET['id']))
+                   $_GET['id'] = (int)$_GET['id'];
+                else
+                    throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+                if(!Yii::app()->user->checkAccess('users_remove_profile', array('id'=>$_GET['id'])))
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
                 break;
         }
     }
