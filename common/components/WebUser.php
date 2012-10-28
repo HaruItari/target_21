@@ -78,7 +78,7 @@ class WebUser extends CWebUser
     public function setAnchorUrl($url = null)
     {
         if($url === null)
-            $url = $_SERVER['PHP_SELF'];
+            $url = $_SERVER['REQUEST_URI'];
 
         $this->setState('_anchorUrl', $url);
     }
@@ -87,12 +87,9 @@ class WebUser extends CWebUser
      * Возвращает адрес якорной страницы.
      * @return string
      */
-    public function getAnchorUrl($url = null)
+    public function getAnchorUrl()
     {
-        $url = $this->getState('_anchorUrl');
-        $this->clearState('_anchorUrl');
-
-        return $url;
+        return $this->getState('_anchorUrl');
     }
 
     /**

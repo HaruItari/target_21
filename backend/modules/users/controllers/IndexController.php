@@ -22,7 +22,9 @@ class IndexController extends BackController
             $params['searchString'] = $searchString;
 
         $usersList = $this->loadUsersList($params);
-        
+
+        Yii::app()->user->setAnchorUrl();
+
         $this->render('index', array(
             'groupsList' => $groupsList,
             'usersList' => $usersList[0],
@@ -49,7 +51,7 @@ class IndexController extends BackController
                 if($group->is_default == 1)
                     $this->setDefaultGroup($group->id);
 
-                $this->redirect(Yii::app()->createUrl('users/index/index'));
+                $this->redirect(Yii::app()->user->getAnchorUrl());
             }
         }
 
@@ -80,7 +82,7 @@ class IndexController extends BackController
                 if($group->is_default == 1)
                     $this->setDefaultGroup($group->id);
 
-                $this->redirect(Yii::app()->createUrl('users/index/index'));
+                $this->redirect(Yii::app()->user->getAnchorUrl());
             }
         }
 
@@ -113,7 +115,7 @@ class IndexController extends BackController
         if(Yii::app()->user->checkAccess('users_remove_group', $group))
             Yii::app()->db->createCommand()->delete('user_group', 'id = :id', array(':id'=>$id));
 
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(Yii::app()->createUrl('users/index/index'));
     }
 
     /**
@@ -144,7 +146,7 @@ class IndexController extends BackController
                 $user->save(false);
                 $userFull->save(false);
 
-                $this->redirect(Yii::app()->createUrl('users/index/index'));
+                $this->redirect(Yii::app()->user->getAnchorUrl());
             }
         }
 
@@ -176,7 +178,8 @@ class IndexController extends BackController
 
         if(!empty($_POST)) {
             Yii::app()->db->createCommand()->update('user', array('is_remove'=>1), 'id = :id', array(':id'=>$id));
-            $this->redirect(Yii::app()->createUrl('users/index/index'));
+            
+            $this->redirect(Yii::app()->user->getAnchorUrl());
         } else {
             $this->render('removeUser', array(
                 'user' => $user,
@@ -293,8 +296,10 @@ class IndexController extends BackController
     {
         switch(mb_strtolower($this->action->id)) {
             case 'index' :
-                $_GET['group'] = (int)$_GET['group'];
-                $_GET['searchString'] = LString::safeText($_GET['searchString']);
+                if(isset($_GET['group']))
+                    $_GET['group'] = (int)$_GET['group'];
+                if(isset($_GEt['searchString']))
+                    $_GET['searchString'] = LString::safeText($_GET['searchString']);
 
                 if(!Yii::app()->user->checkAccess('users_access_cms'))
                     throw new CHttpException(404, self::EXC_NO_ACCESS);
