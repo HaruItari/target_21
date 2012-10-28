@@ -19,6 +19,8 @@ $global = array(
             'users_edit_profile_email',
             'users_edit_profile_email_confirm',
             'users_remove_profile',
+
+            'anime_access_cms',
         ),
         'bizRule' => null,
         'data' => null,

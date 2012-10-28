@@ -24,6 +24,7 @@ return array(
 
     'modules' => array(
         'users',
+        'anime',
     ),
 
     'components' => array(

@@ -78,7 +78,7 @@ class WebUser extends CWebUser
     public function setAnchorUrl($url = null)
     {
         if($url === null)
-            $url = $_SERVER['REQUEST_URI'];
+            $url = Yii::app()->request->getRequestUri();
 
         $this->setState('_anchorUrl', $url);
     }
