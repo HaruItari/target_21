@@ -9,6 +9,11 @@
         </tr>
     </thead>
     <tbody>
+        <tr>
+            <td colspan="5">
+                <b><a href="<?php echo Yii::app()->createUrl('users/index/index'); ?>">Все группы</a></b>
+                        </td>
+        </tr>
         <?php foreach($groupsList as $group)
             $this->renderPartial('index_groupsList_group', array(
                 'group' => $group,
