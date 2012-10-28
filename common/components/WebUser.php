@@ -71,6 +71,31 @@ class WebUser extends CWebUser
     }
 
     /**
+     * Установка якорной страницы, на которую в дальнейшем будет возвращен пользователь.
+     * @params string $url Фиксируемый адрес. Если не указан, присваивается текущая страница.
+     * @return void
+     */
+    public function setAnchorUrl($url = null)
+    {
+        if($url === null)
+            $url = $_SERVER['PHP_SELF'];
+
+        $this->setState('_anchorUrl', $url);
+    }
+
+    /**
+     * Возвращает адрес якорной страницы.
+     * @return string
+     */
+    public function getAnchorUrl($url = null)
+    {
+        $url = $this->getState('_anchorUrl');
+        $this->clearState('_anchorUrl');
+
+        return $url;
+    }
+
+    /**
      * @see CWebUser::beforeLogin()
      */
     protected function beforeLogin($id, $states, $fromCookie)
@@ -107,5 +132,4 @@ class WebUser extends CWebUser
 
         return $this->_model;
     }
-
 }

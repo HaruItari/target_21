@@ -22,7 +22,7 @@ class IndexController extends BackController
             $params['searchString'] = $searchString;
 
         $usersList = $this->loadUsersList($params);
-
+        
         $this->render('index', array(
             'groupsList' => $groupsList,
             'usersList' => $usersList[0],
