@@ -13,33 +13,6 @@
 class MUserGroup extends ActiveRecord
 {
     /**
-     * Возвращает группу по умолчанию.
-     * @static
-     * @retunr int
-     */
-    static public function getDefault()
-    {
-        $record = MUserGroup::model()->find('t.is_default = 1');
-
-        return $record->id;
-    }
-
-    /**
-     * Возвращает список групп для выпадающего списка.
-     * @return array
-     */
-    static public function getListForDdl()
-    {
-        $list = MUserGroup::model()->findAll(array(
-            'order' => 't.group',
-        ));
-
-        $return = CHtml::listData($list, 'id', 'group');
-
-        return $return;
-    }
-
-    /**
      * @see CActiveForm::model()
      */
     public static function model($className=__CLASS__)
@@ -114,5 +87,31 @@ class MUserGroup extends ActiveRecord
                 'group',
             ),
         );
+    }
+    /**
+     * Возвращает группу по умолчанию.
+     * @static
+     * @retunr int
+     */
+    public static function getDefault()
+    {
+        $record = MUserGroup::model()->find('t.is_default = 1');
+
+        return $record->id;
+    }
+
+    /**
+     * Возвращает список групп для выпадающего списка.
+     * @return array
+     */
+    public static function getListForDdl()
+    {
+        $list = MUserGroup::model()->findAll(array(
+            'order' => 't.group',
+        ));
+
+        $return = CHtml::listData($list, 'id', 'group');
+
+        return $return;
     }
 }

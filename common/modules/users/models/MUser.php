@@ -109,6 +109,10 @@ class MUser extends ActiveRecord
             // Редактирвоание личных данных.
 			array('newPassword2', 'compare', 'compareAttribute'=>'newPassword', 'on' => 'editProfile'),
 			array('oldPassword', 'checkOldPassword', 'on' => 'editProfile'),
+
+            // Администрирование профиля.
+            array('login', 'required', 'on' => 'adminProfile'),
+            array('login', 'unique', 'on' => 'adminProfile'),
         );
     }
 

@@ -127,7 +127,7 @@ class IndexController extends FrontController
 		$user->scenario = $userFull->scenario = 'editProfile';
 
         $this->performAjaxValidation(array($user, $userFull));
-        
+
         if(isset($_POST['MUser']) && isset($_POST['MUserFull'])) {
             $oldEmail = $userFull->email;
             $user->attributes = $_POST['MUser'];
@@ -333,17 +333,15 @@ class IndexController extends FrontController
             case 'registration' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
-
                 break;
 
             case 'login' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
-
                 break;
 
             case 'profile' :
-                if(!empty($_GET['id'])) {
+                if(!empty($_GET['id']) && is_int((int)$_GET['id'])) {
                     $_GET['id'] = (int)$_GET['id'];
                 } else {
                     if(!Yii::app()->user->isGuest)
@@ -351,7 +349,6 @@ class IndexController extends FrontController
                     else
                         throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
                 }
-
                 break;
 
             case 'editprofile' :
@@ -362,7 +359,6 @@ class IndexController extends FrontController
             case 'restorepassword' :
                 if(!Yii::app()->user->isGuest)
                     $this->redirect(Yii::app()->baseUrl);
-
                 break;
         }
     }

@@ -107,8 +107,47 @@ class IndexController extends BackController
     }
 
     /**
+     * Редактирование профиля пользователя.
+     * @param int $id Id редактируемого профиля
+     * @return void
+     */
+    public function actionEditUser($id)
+    {
+        $user = MUser::model()->findByPk($id);
+        $userFull = MUserFull::model()->findByPk($id);
+        $user->scenario = $userFull->scenario = 'adminProfile';
+
+        $this->performAjaxValidation(array($user, $userFull));
+
+        if(isset($_POST['MUser']) && isset($_POST['MUserFull'])) {
+            if(Yii::app()->user->checkAccess('users_edit_profile_login'))
+                $user->login = $_POST['MUser']['login'];
+
+            if(Yii::app()->user->checkAccess('users_edit_profile_group', array('id'=>$user->id)))
+                $user->group = $_POST['MUser']['group'];
+
+            if(Yii::app()->user->checkAccess('users_edit_profile_email'))
+                $userFull->email = $_POST['MUserFull']['email'];
+                $userFull->email_confirm = $_POST['MUserFull']['email_confirm'];
+
+            if($this->multipleValidate(array($user, $userFull))) {
+                $user->save(false);
+                $userFull->save(false);
+
+                $this->redirect(Yii::app()->createUrl('users/index/index'));
+            }
+        }
+
+        $this->render('editUser', array(
+            'user' => $user,
+            'userFull' => $userFull,
+        ));
+    }
+
+    /**
      * Удаление пользователя.
      * @param int $id Id удаляемого пользователя
+     * @return void
      */
     public function actionRemoveuser($id)
     {
@@ -233,26 +272,36 @@ class IndexController extends BackController
                 break;
 
             case 'editgroup' :
-                if(!Yii::app()->user->checkAccess('users_edit_group'))
-                    throw new CHttpException(404, self::EXC_NO_ACCESS);
-
-                if(!empty($_GET['id']))
+                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+                if(!Yii::app()->user->checkAccess('users_edit_group'))
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
                 break;
 
             case 'removegroup' :
                 // Проверка на наличие прав роизводится в экшенепотому,
                 // что необходимо знать колличество пользователей в группе.
-                if(!empty($_GET['id']))
+                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
                 break;
 
+            case 'edituser' :
+                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
+                   $_GET['id'] = (int)$_GET['id'];
+                else
+                    throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
+
+                if(!Yii::app()->user->checkAccess('users_edit_profile', array('id'=>$_GET['id'])))
+                    throw new CHttpException(404, self::EXC_NO_ACCESS);
+                break;
+
             case 'removeuser' :
-                if(!empty($_GET['id']))
+                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);

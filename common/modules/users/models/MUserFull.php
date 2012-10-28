@@ -65,6 +65,10 @@ class MUserFull extends ActiveRecord
             // Редактирование личных данных.
 			array('email', 'required', 'on' => 'editProfile'),
 			array('email', 'unique', 'on' => 'editProfile'),
+
+            // Администрирование профиля.
+            array('email', 'unique', 'on' => 'adminProfile'),
+            array('email', 'unique', 'on' => 'adminProfile'),
         );
     }
 
@@ -78,6 +82,7 @@ class MUserFull extends ActiveRecord
             'sex' => 'Пол',
             'birthday' => 'День рождения',
             'email' => 'E-mail',
+            'email_confirm' => 'Адрес подтвержден',
         );
     }
     /**

@@ -58,22 +58,13 @@ return array(
                 'bizRule' => null,
                 'data' => null,
             ),
-            'users_edit_profile_email_confirm' => array(
-                'type' => CAuthItem::TYPE_OPERATION,
-                'description' => 'Редактирование профиля пользователя (подтверждение email)',
-                'children' => array(
-                    'users_edit_profile',
-                ),
-                'bizRule' => null,
-                'data' => null,
-            ),
             'users_edit_profile_group' => array(
                 'type' => CAuthItem::TYPE_OPERATION,
                 'description' => 'Редактирование профиля пользователя (группа)',
                 'children' => array(
                     'users_edit_profile',
                 ),
-                'bizRule' => null,
+                'bizRule' => 'return (!empty($params["id"]) && Yii::app()->user->id != $params["id"]) ? true : false;',
                 'data' => null,
             ),
 
@@ -83,7 +74,7 @@ return array(
         'children' => array(
             'users_access_cms',
         ),
-        'bizRule' => 'return (Yii::app()->user->id != $params["id"]) ? true : false;',
+        'bizRule' => 'return (!empty($params["id"]) && Yii::app()->user->id != $params["id"]) ? true : false;',
         'data' => null,
     ),
 
