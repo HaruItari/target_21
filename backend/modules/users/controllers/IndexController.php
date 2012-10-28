@@ -6,12 +6,22 @@ class IndexController extends BackController
 {
     /**
      * Главная страница модуля.
+     * @param string $group Группа пользователей
+     * @param string $searchString Строка для поиска логина
      * @return void
      */
-    public function actionIndex()
+    public function actionIndex($group = null, $searchString = null)
     {
-        $groupsList = $this->loadgroupsList();
-        $usersList = $this->loadUsersList();
+        // Загрузка списка групп.
+        $groupsList = $this->loadGroupsList();
+
+        // Загрузка списка пользователей.
+        if(!empty($group))
+            $params['group'] = (int)$group;
+        if(!empty($searchString))
+            $params['searchString'] = $searchString;
+
+        $usersList = $this->loadUsersList($params);
 
         $this->render('index', array(
             'groupsList' => $groupsList,
@@ -149,7 +159,7 @@ class IndexController extends BackController
      * @param int $id Id удаляемого пользователя
      * @return void
      */
-    public function actionRemoveuser($id)
+    public function actionRemoveUser($id)
     {
         $record = Yii::app()->db->createCommand()
             ->select(array(
@@ -178,7 +188,7 @@ class IndexController extends BackController
      * Загрузка из БД списка групп.
      * @return array
      */
-    protected function loadgroupsList()
+    protected function loadGroupsList()
     {
         $list = Yii::app()->db->createCommand()
             ->select(array(
@@ -214,11 +224,12 @@ class IndexController extends BackController
 
     /**
      * Загрузка из БД исписка пользователей.
+     * @param array $param Значения параметров дя поиска
      * @return array
      * 0=> Массив сущностей пользователя
      * 1 => Переменная страниц
      */
-    protected function loadUsersList()
+    protected function loadUsersList($params = null)
     {
         $sql = Yii::app()->db->createCommand()
             ->select(array(
@@ -233,8 +244,28 @@ class IndexController extends BackController
             ))
             ->leftjoin('user_full AS rFull', 't.id = rFull.id')
             ->leftjoin('user_last_online AS rLastonline', 't.id = rLastonline.id')
-            ->where('t.is_remove = 0')
+            ->leftjoin('user_group AS rGroup', 't.group = rGroup.id')
             ->order('t.login');
+
+        // Добавляем переданные пользователей условия выборки.
+        if(!empty($params)) {
+            $sqlConditions = array('and');
+            $sqlConditions[] = 't.is_remove = 0';
+
+            // Группа пользователя.
+            if(!empty($params['group'])) {
+                $sqlConditions[] = 'rGroup.id = :group';
+                $sqlParams[':group'] = $params['group'];
+            }
+
+            // Поиск по логину.
+            if(!empty($params['searchString'])) {
+                $sqlConditions[] = 't.login LIKE :search';
+                $sqlParams[':search'] = '%' . $params['searchString'] . '%';
+            }
+
+            $sql->where($sqlConditions, $sqlParams);
+        }
 
         // Разделяем на страницы.
         $countSql = clone $sql;
@@ -262,6 +293,9 @@ class IndexController extends BackController
     {
         switch(mb_strtolower($this->action->id)) {
             case 'index' :
+                $_GET['group'] = (int)$_GET['group'];
+                $_GET['searchString'] = LString::safeText($_GET['searchString']);
+
                 if(!Yii::app()->user->checkAccess('users_access_cms'))
                     throw new CHttpException(404, self::EXC_NO_ACCESS);
                 break;

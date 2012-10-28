@@ -1,6 +1,6 @@
 <tr>
     <td>
-        <a href="" style="<?php echo $group['style']; ?>"><?php echo $group['group']; ?></a>
+        <a href="<?php echo Yii::app()->createurl('users/index/index', array('group'=>$group['id'])); ?>" style="<?php echo $group['style']; ?>"><?php echo $group['group']; ?></a>
     </td>
 
     <td>
