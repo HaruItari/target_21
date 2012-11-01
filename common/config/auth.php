@@ -20,7 +20,7 @@ $global = array(
             'users_edit_profile_email_confirm',
             'users_remove_profile',
 
-            'anime_access_cms',
+            'anime_add_anime',
         ),
         'bizRule' => null,
         'data' => null,
@@ -46,5 +46,7 @@ $global = array(
 
 // Модуль USERS.
 $global += require_once(Yii::getPathOfAlias('common.modules.users.config.auth') . '.php');
+// Модуль ANIME.
+$global += require_once(Yii::getPathOfAlias('common.modules.anime.config.auth') . '.php');
 
 return $global;
