@@ -341,7 +341,7 @@ class IndexController extends FrontController
                 break;
 
             case 'profile' :
-                if(!empty($_GET['id']) && is_int((int)$_GET['id'])) {
+                if(!empty($_GET['id']) && ((int)$_GET['id'] > 0)) {
                     $_GET['id'] = (int)$_GET['id'];
                 } else {
                     if(!Yii::app()->user->isGuest)

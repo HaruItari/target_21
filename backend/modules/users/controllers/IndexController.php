@@ -178,7 +178,7 @@ class IndexController extends BackController
 
         if(!empty($_POST)) {
             Yii::app()->db->createCommand()->update('user', array('is_remove'=>1), 'id = :id', array(':id'=>$id));
-            
+
             $this->redirect(Yii::app()->user->getAnchorUrl());
         } else {
             $this->render('removeUser', array(
@@ -298,7 +298,7 @@ class IndexController extends BackController
             case 'index' :
                 if(isset($_GET['group']))
                     $_GET['group'] = (int)$_GET['group'];
-                if(isset($_GEt['searchString']))
+                if(isset($_GET['searchString']))
                     $_GET['searchString'] = LString::safeText($_GET['searchString']);
 
                 if(!Yii::app()->user->checkAccess('users_access_cms'))
@@ -311,7 +311,7 @@ class IndexController extends BackController
                 break;
 
             case 'editgroup' :
-                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
+                if(!empty($_GET['id']) && ((int)$_GET['id'] > 0))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
@@ -323,14 +323,14 @@ class IndexController extends BackController
             case 'removegroup' :
                 // Проверка на наличие прав роизводится в экшенепотому,
                 // что необходимо знать колличество пользователей в группе.
-                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
+                if(!empty($_GET['id']) && ((int)$_GET['id'] > 0))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
                 break;
 
             case 'edituser' :
-                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
+                if(!empty($_GET['id']) && ((int)$_GET['id'] > 0))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
@@ -340,7 +340,7 @@ class IndexController extends BackController
                 break;
 
             case 'removeuser' :
-                if(!empty($_GET['id']) && is_int((int)$_GET['id']))
+                if(!empty($_GET['id']) && ((int)$_GET['id'] > 0))
                    $_GET['id'] = (int)$_GET['id'];
                 else
                     throw new CHttpException(404, self::EXC_WRONG_ADDRESS);
