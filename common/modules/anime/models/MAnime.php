@@ -10,13 +10,10 @@
     `author` INT NOT NULL ,
     `section` INT NOT NULL ,
     `date_create` INT NOT NULL ,
-    `html_title` VARCHAR( 250 ) NULL ,
-    `html_description` VARCHAR( 250 ) NULL ,
-    `html_keywords` VARCHAR( 250 ) NULL ,
     `edit_comment` VARCHAR( 100 ) NULL
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
  */
-class Manime extends ActiveRecord
+class MAnime extends ActiveRecord
 {
     /**
      * @see CActiveRecord::model()
@@ -46,11 +43,16 @@ class Manime extends ActiveRecord
 
             array('date_create', 'default', 'value' => time()),
 
-            array('section', 'in', 'range' => ManimeSection::getList('id')),
-
-            array('html_title, html_description, html_keywords', 'length', 'max' => 250),
+            array('section', 'in', 'range' => MAnimeSection::model()->getList('id')),
 
             array('edit_comment', 'length', 'max' => 50),
+
+            array('author', 'default', 'value' => Yii::app()->user->id),
+
+            array('date_create', 'default', 'value' => time()),
+
+            // Добавление нового релиза.
+            array('headline, section', 'required', 'on' =>'add'),
         );
     }
 
@@ -66,9 +68,6 @@ class Manime extends ActiveRecord
             'section' => 'Раздел',
             'author' => 'Автор',
             'date_create' => 'Дата добавления',
-            'html_title' => 'Title (meta)',
-            'html_description' => 'Description (meta)',
-            'html_keywords' => 'Key words (meta)',
             'edit_comment' => 'Комментарий к изменениям',
         );
     }
@@ -81,9 +80,6 @@ class Manime extends ActiveRecord
         return array(
             'headline' => 'До 100 символов',
             'description' => 'До 2000 символов',
-            'html_title' => 'До 250 символов',
-            'html_description' => 'До 250 символов',
-            'html_keywords' => 'До 250 символов',
             'edit_comment' => 'До 50 символов',
         );
     }
@@ -111,13 +107,10 @@ class Manime extends ActiveRecord
             return false;
 
         // Заменяем пустые поля на NULL
-        if(empty($this->description)) $this->description = new CDbExpression('NULL');
-        if(empty($this->html_title)) $this->html_title = new CDbExpression('NULL');
-        if(empty($this->html_description)) $this->html_description = new CDbExpression('NULL');
-        if(empty($this->html_keywords)) $this->html_keywords = new CDbExpression('NULL');
-        if(empty($this->edit_comment)) $this->edit_comment = new CDbExpression('NULL');
-
-        $this->date_create = strtotime($this->date_create);
+        $this->description =  (empty($this->description))  ? new CDbExpression('NULL') : LBbCode::bbToHtml($this->description, 'full');
+        $this->edit_comment = (empty($this->edit_comment)) ? new CDbExpression('NULL') : Lstring::safeText($this->edit_comment);
+        $this->headline = Lstring::safeText($this->headline);
+        $this->date_create =  strtotime($this->date_create);
 
         return true;
     }
@@ -127,7 +120,8 @@ class Manime extends ActiveRecord
      */
     protected function afterFind()
     {
-        if(!empty($this->date_create))
-            $this->date_create = date('d.m.Y', $this->date_create);
+        $this->date_create = date('d.m.Y', $this->date_create);
+        $this->description = LBbCode::htmlToBb($this->description);
+        $this->headline = LSafeText($this->headline, true);
     }
 }
