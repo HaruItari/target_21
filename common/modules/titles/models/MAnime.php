@@ -2,7 +2,7 @@
 /**
  * Аниме-релизы - фильмы и сериалы.
  *
-    CREATE TABLE `target_21`.`anime_film` (
+    CREATE TABLE `title_anime` (
     `id` INT NOT NULL ,
     `type` VARCHAR( 100 ) NULL ,
     `edition_begin` INT NULL ,
@@ -16,7 +16,7 @@
     PRIMARY KEY ( `id` )
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
  */
-class MAnimeFilm extends ActiveRecord
+class MAnime extends ActiveRecord
 {
     /**
      * @see CActiveRecord::model()
@@ -31,7 +31,7 @@ class MAnimeFilm extends ActiveRecord
      */
     public function tableName()
     {
-        return 'anime_film';
+        return 'title_anime';
     }
 
     /**

@@ -3,16 +3,16 @@
  * Иерархия ролей.
  */
 return array(
-    'anime_add_anime' => array(
+    'titles_add_title' => array(
         'type' => CAuthItem::TYPE_TASK,
         'description' => 'Добвление нового релиза',
         'children' => array(
-            'anime_access_cms',
+            'titles_access_cms',
         ),
         'bizRule' => null,
         'data' => null,
     ),
-    'anime_access_cms' => array(
+    'titles_access_cms' => array(
         'type' => CAuthItem::TYPE_TASK,
         'description' => 'доступ к cms модуля ANIME',
         'children' => array(

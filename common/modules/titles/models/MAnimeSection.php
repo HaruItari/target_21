@@ -84,13 +84,6 @@ class MAnimeSection extends Model
         22 => array('id' => 22, 'name' => 'Фильмы',             'url' => 'film-sub',    'parent' => 2),
         23 => array('id' => 23, 'name' => 'OVA',                'url' => 'ova-sub',     'parent' => 2),
         24 => array('id' => 24, 'name' => 'Онгоинги',           'url' => 'ongoing-sub', 'parent' => 2),
-
-        3  => array('id' => 3,  'name' => 'Манга', 'url' => 'manga',   'parent' => 0),
-        31 => array('id' => 31, 'name' => 'Завершенная манга',  'url' => 'manga-complete',   'parent' => 3),
-        32 => array('id' => 32, 'name' => 'Незавершенная манга',  'url' => 'manga-incomplete',   'parent' => 3),
-
-        4  => array('id' => 4,  'name' => 'Прочее', 'url' => 'other',   'parent' => 0),
-        41 => array('id' => 41, 'name' => 'Обои',  'url' => 'other-wallpape',   'parent' => 4),
     );
 
     /**

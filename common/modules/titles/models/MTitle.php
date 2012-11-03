@@ -1,8 +1,8 @@
 <?php
 /**
- * Аниме-релизы. Основная таблица.
+ * Релизы. Основная таблица.
  *
-    CREATE TABLE `anime` (
+    CREATE TABLE `title` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
     `headline` VARCHAR( 100 ) NOT NULL ,
     `url` VARCHAR( 100 ) NOT NULL ,
@@ -13,7 +13,7 @@
     `edit_comment` VARCHAR( 100 ) NULL
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
  */
-class MAnime extends ActiveRecord
+class MTitle extends ActiveRecord
 {
     /**
      * @see CActiveRecord::model()
@@ -28,7 +28,7 @@ class MAnime extends ActiveRecord
      */
     public function tableName()
     {
-        return 'anime';
+        return 'title';
     }
 
     /**

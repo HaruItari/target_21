@@ -5,14 +5,14 @@
  * @author Хару Итари <HaruItari@gmail.com>
  * @version 1.0 beta
  */
-class AnimeModule extends WebModule
+class TitlesModule extends WebModule
 {
 	public function init()
 	{
 		$this->setImport(array(
-			'common.modules.anime.components.*',
+			'common.modules.titles.components.*',
 
-			'common.modules.anime.models.*',
+			'common.modules.titles.models.*',
 		));
 
         // Инициализация переменных.

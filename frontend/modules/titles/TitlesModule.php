@@ -10,9 +10,9 @@ class AnimeModule extends WebModule
 	public function init()
 	{
 		$this->setImport(array(
-			'common.modules.anime.components.*',
+			'common.modules.titles.components.*',
 
-			'common.modules.anime.models.*',
+			'common.modules.titles.models.*',
 		));
 
         // Инициализация переменных.
