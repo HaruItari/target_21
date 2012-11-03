@@ -16,7 +16,7 @@
     PRIMARY KEY ( `id` )
     ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_general_ci;
  */
-class MAnime extends ActiveRecord
+class MAnimeFilm extends ActiveRecord
 {
     /**
      * @see CActiveRecord::model()
@@ -31,7 +31,7 @@ class MAnime extends ActiveRecord
      */
     public function tableName()
     {
-        return 'anime_file';
+        return 'anime_film';
     }
 
     /**
