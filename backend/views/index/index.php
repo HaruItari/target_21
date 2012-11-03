@@ -3,7 +3,12 @@
     <li><a href="<?php echo Yii::app()->createUrl('index/logout'); ?>">logout</a>
     <li><a href="<?php echo Yii::app()->createUrl('users/index/index'); ?>">USERS</a>
         <ul>
-
+            
+        </ul>
+    </li>
+    <li><a href="<?php echo Yii::app()->createUrl('anime/index/index'); ?>">ANIME</a>
+        <ul>
+            <li><a href="<?php echo Yii::app()->createUrl('anime/index/addAnime'); ?>">addAnime</a>
         </ul>
     </li>
 </ul>

@@ -54,7 +54,7 @@ class MUserFull extends ActiveRecord
 
             array('sex', 'in', 'range' => array('Мужской', 'Женский')),
 
-            array('birthday', 'match', 'pattern' => '/^\d\d\.\d\d\.\d\d\d\d$/'),
+            array('birthday', 'match', 'pattern' => '/^\d\d\.\d\d\.\d\d\d\d$/iu'),
 
             array('date_reg', 'default', 'value' => time()),
 
