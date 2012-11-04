@@ -17,6 +17,14 @@ class TitlesModule extends WebModule
 
         // Инициализация переменных.
         $this->setParams(array(
+            // Место расположения обложек релизов.
+            'coversDir' => Yii::getPathOfAlias('media') . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR . 'covers',
+            'avatarsDirHtml' => '/media/titles/covers',
+
+            // Место расположения скриншотов релизов.
+            'screensDir' => Yii::getPathOfAlias('media') . DIRECTORY_SEPARATOR . $this->id . DIRECTORY_SEPARATOR . 'screens',
+            'screensDirHtml' => '/media/titles/screens',
+
             // время кэширования.
             'cacheTime' => array(
 

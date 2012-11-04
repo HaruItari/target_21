@@ -21,6 +21,7 @@ $global = array(
             'users_remove_profile',
 
             'titles_add_title',
+            'titles_edit_title',
         ),
         'bizRule' => null,
         'data' => null,
